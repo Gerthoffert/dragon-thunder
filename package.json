@@ -1,0 +1,27 @@
+{
+  "name": "dragon-thunder-game",
+  "version": "1.0.0",
+  "description": "A Phaser RPG game based on Le Tonnerre du Dragon - Chapter 1",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development --open"
+  },
+  "keywords": ["phaser", "rpg", "dragon", "game"],
+  "author": "Dragon Thunder Game",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.70.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^4.15.0",
+    "html-webpack-plugin": "^5.5.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.0"
+  }
+}
