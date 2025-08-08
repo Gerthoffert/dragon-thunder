@@ -24,65 +24,109 @@ export default class IntroScene extends Phaser.Scene {
       ? this.orientationManager.getLandscapeLayout()
       : this.getDefaultLayout();
 
-    // Create modern animated stars with glow effect
-    const starCount = this.deviceType === 'mobile' ? 30 : 50;
-    this.stars = [];
+    // Create modern background with gradient overlay
+    this.createModernBackground();
 
-    for (let i = 0; i < starCount; i++) {
-      const x = Phaser.Math.Between(0, this.gameWidth);
-      const y = Phaser.Math.Between(0, this.gameHeight * 0.4);
-      const size = this.scaleValue(Phaser.Math.Between(1, 3));
-
-      const star = this.add.circle(x, y, size, 0xffffff);
-      star.setAlpha(Phaser.Math.FloatBetween(0.3, 1));
-
-      // Add subtle animation to stars
-      this.tweens.add({
-        targets: star,
-        alpha: Phaser.Math.FloatBetween(0.2, 1),
-        duration: Phaser.Math.Between(2000, 4000),
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut',
-      });
-
-      this.stars.push(star);
-    }
+    // Create enhanced particle system
+    this.createParticleSystem();
 
     const centerX = this.gameWidth / 2;
 
-    // Modern title with gradient effect - positioned for landscape
+    // Create title with modern effects
+    this.createModernTitle(centerX, layout);
+
+    // Create subtitle with animation
+    this.createSubtitle(centerX, layout);
+
+    // Create story section with modern card design
+    this.createStorySection(centerX, layout);
+
+    // Create character selection
+    this.createCharacterSelection(centerX, layout);
+
+    // Listen for resize events
+    this.scale.on('resize', this.resize, this);
+  }
+
+  createModernBackground() {
+    // Simple gradient background with modern colors
+    const bg1 = this.add.rectangle(0, 0, this.gameWidth, this.gameHeight, 0x0f0f23, 1);
+    bg1.setOrigin(0, 0);
+
+    const bg2 = this.add.rectangle(0, 0, this.gameWidth, this.gameHeight, 0x1a1a2e, 0.7);
+    bg2.setOrigin(0, 0);
+
+    // Static overlay for depth
+    const overlay = this.add.rectangle(0, 0, this.gameWidth, this.gameHeight, 0x16213e, 0.2);
+    overlay.setOrigin(0, 0);
+  }
+
+  createParticleSystem() {
+    // Simple static stars for modern look without animation overhead
+    this.createStaticStars();
+  }
+
+  createStaticStars() {
+    const starCount = this.deviceType === 'mobile' ? 20 : 35;
+
+    for (let i = 0; i < starCount; i++) {
+      const x = Phaser.Math.Between(0, this.gameWidth);
+      const y = Phaser.Math.Between(0, this.gameHeight * 0.6);
+      const size = this.scaleValue(Phaser.Math.Between(1, 3));
+      const brightness = Phaser.Math.FloatBetween(0.3, 0.8);
+
+      const star = this.add.circle(x, y, size, 0xffffff);
+      star.setAlpha(brightness);
+    }
+  }
+
+  createModernTitle(centerX, layout) {
+    // Clean title with modern typography
     const title = this.add
       .text(centerX, this.gameHeight * layout.titleY, 'Le Tonnerre du Dragon', {
-        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 42 : 48),
+        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 42 : 52),
         fill: '#FFD700',
         fontFamily: 'Cinzel, Georgia, serif',
         fontWeight: '600',
         stroke: '#e94560',
         strokeThickness: this.scaleValue(2),
+        shadow: {
+          offsetX: 2,
+          offsetY: 2,
+          color: '#000000',
+          blur: 6,
+          stroke: false,
+          fill: true,
+        },
       })
       .setOrigin(0.5);
 
-    // Add glow effect to title
-    this.tweens.add({
-      targets: title,
-      alpha: 0.8,
-      duration: 2000,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut',
-    });
+    return title;
+  }
 
-    this.add
+  createSubtitle(centerX, layout) {
+    const subtitle = this.add
       .text(centerX, this.gameHeight * layout.subtitleY, 'Chapitre 1: La Nuit du Tonnerre', {
-        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 22 : 24),
+        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 22 : 26),
         fill: '#a0a0a0',
         fontFamily: 'Inter, Arial, sans-serif',
         fontWeight: '400',
+        shadow: {
+          offsetX: 1,
+          offsetY: 1,
+          color: '#000000',
+          blur: 4,
+          stroke: false,
+          fill: true,
+        },
       })
       .setOrigin(0.5);
 
-    // Story text - with better mobile formatting and larger text
+    return subtitle;
+  }
+
+  createStorySection(centerX, layout) {
+    // Story text with better mobile formatting and larger text
     const storyText =
       this.deviceType === 'mobile'
         ? `Dans le village de Millhaven, la nuit du tonnerre change tout.
@@ -99,41 +143,61 @@ Qui serez-vous pour affronter les mystères de cette nuit?`
     Une aventure dangereuse mais fascinante vous attend. Qui serez-vous pour
     affronter les mystères de la nuit du tonnerre?`;
 
-    this.add
+    // Create a subtle background for the story text
+    const storyBg = this.add.rectangle(
+      centerX,
+      this.gameHeight * layout.storyY,
+      this.gameWidth * (this.deviceType === 'mobile' ? 0.9 : 0.85),
+      this.scaleValue(this.deviceType === 'mobile' ? 160 : 140),
+      0x1a1a2e,
+      0.3
+    );
+    storyBg.setStrokeStyle(1, 0x2d2d44, 0.5);
+
+    const story = this.add
       .text(centerX, this.gameHeight * layout.storyY, storyText, {
-        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 18 : 18),
+        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 18 : 19),
         fill: '#ffffff',
         fontFamily: 'Inter, Arial, sans-serif',
         fontWeight: '400',
         align: 'center',
         wordWrap: { width: this.gameWidth * (this.deviceType === 'mobile' ? 0.85 : 0.8) },
-        lineSpacing: layout.spacing === 'compact' ? 8 : this.deviceType === 'mobile' ? 12 : 4,
+        lineSpacing: layout.spacing === 'compact' ? 10 : this.deviceType === 'mobile' ? 14 : 6,
         shadow: {
           offsetX: 1,
           offsetY: 1,
           color: '#000000',
-          blur: 2,
+          blur: 3,
           stroke: false,
           fill: true,
         },
       })
       .setOrigin(0.5);
 
-    // Character selection with modern styling - positioned for landscape
-    this.add
+    return story;
+  }
+
+  createCharacterSelection(centerX, layout) {
+    // Character selection title
+    const selectionTitle = this.add
       .text(centerX, this.gameHeight * layout.selectionY, 'Choisissez votre personnage:', {
-        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 20 : 20),
+        fontSize: this.scaleFont(this.deviceType === 'mobile' ? 20 : 22),
         fill: '#FFD700',
         fontFamily: 'Inter, Arial, sans-serif',
         fontWeight: '500',
+        shadow: {
+          offsetX: 1,
+          offsetY: 1,
+          color: '#000000',
+          blur: 4,
+          stroke: false,
+          fill: true,
+        },
       })
       .setOrigin(0.5);
 
-    // Button layout based on device type
+    // Create character buttons
     this.createCharacterButtons();
-
-    // Listen for resize events
-    this.scale.on('resize', this.resize, this);
   }
 
   createCharacterButtons() {
@@ -173,41 +237,26 @@ Qui serez-vous pour affronter les mystères de cette nuit?`
       kiaraY = finnY = this.gameHeight * layout.buttonsY;
     }
 
-    // Kiara button with modern gradient design
+    // Kiara button with clean modern design
     const kiaraBtn = this.add
-      .rectangle(kiaraX, kiaraY, buttonWidth, buttonHeight, 0x4a90e2)
+      .rectangle(kiaraX, kiaraY, buttonWidth, buttonHeight, 0x4a90e2, 0.8)
       .setInteractive()
-      .setStrokeStyle(2, 0x5ba0f2)
+      .setStrokeStyle(2, 0x5ba0f2, 0.6);
+
+    // Simple hover effects without complex animations
+    kiaraBtn
       .on('pointerdown', () => {
         this.selectCharacter('kiara');
-        // Add button press effect
-        this.tweens.add({
-          targets: kiaraBtn,
-          scaleX: 0.95,
-          scaleY: 0.95,
-          duration: 100,
-          yoyo: true,
-        });
+        kiaraBtn.setScale(0.95);
+        this.time.delayedCall(100, () => kiaraBtn.setScale(1));
       })
       .on('pointerover', () => {
-        kiaraBtn.setFillStyle(0x5ba0f2);
-        this.tweens.add({
-          targets: kiaraBtn,
-          scaleX: 1.05,
-          scaleY: 1.05,
-          duration: 200,
-          ease: 'Power2',
-        });
+        kiaraBtn.setFillStyle(0x5ba0f2, 0.9);
+        kiaraBtn.setScale(1.05);
       })
       .on('pointerout', () => {
-        kiaraBtn.setFillStyle(0x4a90e2);
-        this.tweens.add({
-          targets: kiaraBtn,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 200,
-          ease: 'Power2',
-        });
+        kiaraBtn.setFillStyle(0x4a90e2, 0.8);
+        kiaraBtn.setScale(1);
       });
 
     const kiaraText = this.add
@@ -217,44 +266,37 @@ Qui serez-vous pour affronter les mystères de cette nuit?`
         fontFamily: 'Inter, Arial, sans-serif',
         fontWeight: '500',
         align: 'center',
+        shadow: {
+          offsetX: 1,
+          offsetY: 1,
+          color: '#000000',
+          blur: 3,
+          stroke: false,
+          fill: true,
+        },
       })
       .setOrigin(0.5);
 
-    // Finn button with modern gradient design
+    // Finn button with clean modern design
     const finnBtn = this.add
-      .rectangle(finnX, finnY, buttonWidth, buttonHeight, 0xe94560)
+      .rectangle(finnX, finnY, buttonWidth, buttonHeight, 0xe94560, 0.8)
       .setInteractive()
-      .setStrokeStyle(2, 0xf75c4c)
+      .setStrokeStyle(2, 0xf75c4c, 0.6);
+
+    // Simple hover effects
+    finnBtn
       .on('pointerdown', () => {
         this.selectCharacter('finn');
-        // Add button press effect
-        this.tweens.add({
-          targets: finnBtn,
-          scaleX: 0.95,
-          scaleY: 0.95,
-          duration: 100,
-          yoyo: true,
-        });
+        finnBtn.setScale(0.95);
+        this.time.delayedCall(100, () => finnBtn.setScale(1));
       })
       .on('pointerover', () => {
-        finnBtn.setFillStyle(0xf75c4c);
-        this.tweens.add({
-          targets: finnBtn,
-          scaleX: 1.05,
-          scaleY: 1.05,
-          duration: 200,
-          ease: 'Power2',
-        });
+        finnBtn.setFillStyle(0xf75c4c, 0.9);
+        finnBtn.setScale(1.05);
       })
       .on('pointerout', () => {
-        finnBtn.setFillStyle(0xe94560);
-        this.tweens.add({
-          targets: finnBtn,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 200,
-          ease: 'Power2',
-        });
+        finnBtn.setFillStyle(0xe94560, 0.8);
+        finnBtn.setScale(1);
       });
 
     const finnText = this.add
@@ -264,6 +306,14 @@ Qui serez-vous pour affronter les mystères de cette nuit?`
         fontFamily: 'Inter, Arial, sans-serif',
         fontWeight: '500',
         align: 'center',
+        shadow: {
+          offsetX: 1,
+          offsetY: 1,
+          color: '#000000',
+          blur: 3,
+          stroke: false,
+          fill: true,
+        },
       })
       .setOrigin(0.5);
   }
