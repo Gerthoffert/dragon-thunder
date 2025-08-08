@@ -1,42 +1,338 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1a1a2e" />
     <title>Dragon Thunder - Chapter 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --accent-color: #e94560;
+        --gold-color: #ffd700;
+        --text-primary: #ffffff;
+        --text-secondary: #a0a0a0;
+        --border-color: #2d2d44;
+        --shadow-dark: rgba(0, 0, 0, 0.8);
+        --shadow-glow: rgba(233, 69, 96, 0.3);
+        --gradient-primary: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        --gradient-accent: linear-gradient(45deg, #e94560, #0f3460);
+        --border-radius: 12px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--gradient-primary);
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: hidden;
+        touch-action: manipulation;
+        position: relative;
+      }
+
+      /* Animated background particles */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 80%, rgba(15, 52, 96, 0.15) 0%, transparent 50%);
+        animation: backgroundFloat 20s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      @keyframes backgroundFloat {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        33% {
+          transform: translateY(-10px) rotate(1deg);
+        }
+        66% {
+          transform: translateY(5px) rotate(-1deg);
+        }
+      }
+
+      #game-container {
+        position: relative;
+        background: var(--secondary-bg);
+        border: 3px solid var(--border-color);
+        border-radius: var(--border-radius);
+        box-shadow:
+          0 20px 60px var(--shadow-dark),
+          0 0 0 1px rgba(255, 255, 255, 0.08),
+          0 0 40px rgba(233, 69, 96, 0.15),
+          inset 0 2px 0 rgba(255, 255, 255, 0.1),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(20px);
+        max-width: 100vw;
+        max-height: 100vh;
+        max-height: 100dvh;
+        overflow: hidden;
+        transition: var(--transition);
+        z-index: 1;
+      }
+
+      #game-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.03) 0%,
+          rgba(233, 69, 96, 0.02) 30%,
+          rgba(255, 215, 0, 0.01) 60%,
+          transparent 100%
+        );
+        border-radius: calc(var(--border-radius) - 2px);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      #game-container::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(233, 69, 96, 0.3),
+          transparent,
+          rgba(255, 215, 0, 0.2),
+          transparent
+        );
+        border-radius: var(--border-radius);
+        z-index: -1;
+        animation: borderGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes borderGlow {
+        0%,
+        100% {
+          opacity: 0.5;
+          filter: blur(2px);
+        }
+        50% {
+          opacity: 0.8;
+          filter: blur(4px);
+        }
+      }
+
+      #game-container:hover {
+        box-shadow:
+          0 25px 80px var(--shadow-dark),
+          0 0 0 1px rgba(255, 255, 255, 0.12),
+          0 0 60px rgba(233, 69, 96, 0.25),
+          inset 0 2px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+      }
+
+      /* Loading screen styles */
+      #loading-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-primary);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease-out;
+      }
+
+      #loading-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .loading-logo {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 600;
+        background: linear-gradient(45deg, var(--gold-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes logoGlow {
+        from {
+          filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        }
+        to {
+          filter: drop-shadow(0 0 20px rgba(233, 69, 96, 0.4));
+        }
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid var(--accent-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+      }
+
+      /* Responsive design with enhanced mobile styling */
+      @media (max-width: 768px) {
         body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Georgia', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+          padding: 0;
         }
+
         #game-container {
-            border: 3px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+          border: none;
+          border-radius: 0;
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          box-shadow: none;
         }
-        #ui-overlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-            color: white;
-            font-size: 16px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+
+        #game-container::before {
+          border-radius: 0;
         }
+
+        #game-container::after {
+          display: none; /* Hide the glow border on mobile for cleaner look */
+        }
+
+        .loading-logo {
+          font-size: clamp(1.5rem, 8vw, 2.5rem);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .loading-logo {
+          font-size: clamp(1.25rem, 8vw, 2rem);
+          margin-bottom: 1.5rem;
+        }
+
+        .loading-spinner {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      /* High DPI displays - crisper borders */
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        #game-container {
+          border-width: 2px;
+        }
+      }
+
+      /* Desktop enhancements */
+      @media (min-width: 1200px) {
+        #game-container {
+          box-shadow:
+            0 30px 90px var(--shadow-dark),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            0 0 80px rgba(233, 69, 96, 0.2),
+            inset 0 3px 0 rgba(255, 255, 255, 0.12),
+            inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+        }
+      }
+      #ui-overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        color: var(--text-primary);
+        font-size: 16px;
+        text-shadow: 0 2px 8px var(--shadow-dark);
+        pointer-events: none;
+        font-weight: 400;
+      }
+
+      /* Performance optimizations */
+      canvas {
+        display: block;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="game-container">
-        <div id="ui-overlay">
-            <div id="story-text"></div>
-            <div id="character-status"></div>
-        </div>
+      <div id="loading-screen">
+        <div class="loading-logo">Dragon Thunder</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading adventure...</div>
+      </div>
+      <div id="ui-overlay">
+        <div id="story-text"></div>
+        <div id="character-status"></div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
