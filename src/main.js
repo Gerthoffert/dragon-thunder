@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import IntroScene from './scenes/IntroScene.js';
+import FinnHouseScene from './scenes/FinnHouseScene.js';
+import KiaraHouseScene from './scenes/KiaraHouseScene.js';
 import { OrientationManager } from './utils/OrientationManager.js';
 
 const config = {
@@ -33,7 +35,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [IntroScene],
+  scene: [IntroScene, FinnHouseScene, KiaraHouseScene],
 };
 
 // Game instance

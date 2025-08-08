@@ -381,6 +381,12 @@ Qui serez-vous pour affronter les mystères de cette nuit?`
 
   selectCharacter(character) {
     window.gameState.currentCharacter = character;
-    this.scene.start('FinnHouseScene');
+
+    // Navigate to the appropriate character scene
+    if (character === 'kiara') {
+      this.scene.start('KiaraHouseScene');
+    } else if (character === 'finn') {
+      this.scene.start('FinnHouseScene');
+    }
   }
 }
